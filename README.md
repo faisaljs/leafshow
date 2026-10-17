@@ -5,9 +5,11 @@ Cloudstream 3 plugin repository.
 ## Install
 
 Settings → Extensions → Add repository:
-https://raw.githubusercontent.com/faisaljs/leafshow/builds/plugins.json
+```
+https://raw.githubusercontent.com/faisaljs/leafshow/refs/heads/builds/repo.json
+```
 
-text
+Shortcode : ```leafshow```
 
 ## Plugins
 
