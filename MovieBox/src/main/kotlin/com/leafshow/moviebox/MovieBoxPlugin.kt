@@ -7,6 +7,7 @@ import com.lagradost.cloudstream3.plugins.Plugin
 @CloudstreamPlugin
 class MovieBoxPlugin : Plugin() {
     override fun load(context: Context) {
-        registerMainAPI(MovieBoxProvider())
+        val prefs = context.getSharedPreferences("MovieBox", Context.MODE_PRIVATE)
+        registerMainAPI(MovieBoxProvider(prefs))
     }
 }
