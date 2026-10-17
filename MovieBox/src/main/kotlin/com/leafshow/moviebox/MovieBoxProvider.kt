@@ -123,7 +123,7 @@ class MovieBoxProvider(
         val bodyLength = bodyBytes?.size?.toString() ?: ""
 
         return buildString {
-            append(method.toUpperCase(Locale.ROOT)).append('\n')
+            append(method.uppercase(Locale.ROOT)).append('\n')
             append(accept ?: "").append('\n')
             append(contentType ?: "").append('\n')
             append(bodyLength).append('\n')
