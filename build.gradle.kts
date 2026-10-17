@@ -8,14 +8,16 @@ buildscript {
         google()
         mavenCentral()
         maven("https://jitpack.io")
-        // Needed if Kotlin 2.4.x is only on the JetBrains dev repo (EAP/RC).
-        // Harmless when it's on mavenCentral — resolution just hits the first repo.
         maven("https://maven.pkg.jetbrains.space/kotlin/p/kotlin/dev")
     }
 
     dependencies {
         classpath("com.android.tools.build:gradle:8.7.3")
-        classpath("com.github.recloudstream:gradle:-SNAPSHOT")
+
+        // JitPack needs master-SNAPSHOT or the plugin-marker coordinate.
+        // Bare -SNAPSHOT resolves to nothing.
+        classpath("com.github.recloudstream.gradle:com.lagradost.cloudstream3.gradle.gradle.plugin:-SNAPSHOT")
+
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:2.4.0")
     }
 }
