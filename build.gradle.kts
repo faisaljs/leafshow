@@ -13,6 +13,7 @@ buildscript {
 
     dependencies {
         classpath("com.android.tools.build:gradle:8.7.3")
+        // Use the full plugin marker coordinate for reliable resolution
         classpath("com.github.recloudstream.gradle:com.lagradost.cloudstream3.gradle.gradle.plugin:-SNAPSHOT")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:2.4.0")
     }
@@ -47,7 +48,7 @@ subprojects {
 
         defaultConfig {
             minSdk = 21
-            compileSdkVersion(33)   // Cloudstream plugin tested at 33
+            compileSdkVersion(33)
             targetSdk = 33
         }
 

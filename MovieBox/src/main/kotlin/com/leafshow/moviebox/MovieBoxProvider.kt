@@ -38,10 +38,6 @@ class MovieBoxProvider : MainAPI() {
             "X-Request-Lang" to "en"
         )
 
-    // ------------------------------------------------------------------
-    // API plumbing
-    // ------------------------------------------------------------------
-
     private fun encodeUrl(value: String): String =
         try {
             URLEncoder.encode(value, "UTF-8").replace("+", "%20")
@@ -86,10 +82,6 @@ class MovieBoxProvider : MainAPI() {
         }.getOrNull()
     }
 
-    // ------------------------------------------------------------------
-    // Home
-    // ------------------------------------------------------------------
-
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
         val root = api(
             "/home",
@@ -101,10 +93,6 @@ class MovieBoxProvider : MainAPI() {
 
         return newHomePageResponse(request.name, found.values.toList())
     }
-
-    // ------------------------------------------------------------------
-    // Search
-    // ------------------------------------------------------------------
 
     override suspend fun search(query: String): List<SearchResponse> {
         val root = api(
@@ -157,10 +145,6 @@ class MovieBoxProvider : MainAPI() {
             this.posterUrl = poster
         }
     }
-
-    // ------------------------------------------------------------------
-    // Detail
-    // ------------------------------------------------------------------
 
     private suspend fun fetchDetail(subjectId: String, detailPath: String): JsonNode? {
         val attempts = listOf(
@@ -253,10 +237,6 @@ class MovieBoxProvider : MainAPI() {
             }
         }
     }
-
-    // ------------------------------------------------------------------
-    // Links
-    // ------------------------------------------------------------------
 
     private suspend fun fetchPlay(
         subjectId: String,

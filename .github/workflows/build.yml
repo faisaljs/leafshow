@@ -48,8 +48,24 @@ jobs:
           git init
           git checkout --orphan builds
           git remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
-          cp "$GITHUB_WORKSPACE"/src/**/build/*.cs3 . 2>/dev/null || true
-          cp "$GITHUB_WORKSPACE"/src/build/plugins.json . 2>/dev/null || true
+
+          # Use find to robustly copy all .cs3 files, regardless of output path
+          find "$GITHUB_WORKSPACE/src" -name "*.cs3" -type f -exec cp {} . \;
+          cp "$GITHUB_WORKSPACE/src/build/plugins.json" . 2>/dev/null || true
+
+          # Generate the repo.json manifest required by the Cloudstream app[reference:1]
+          cat > repo.json <<EOF
+          {
+            "name": "Leafshow Repo",
+            "description": "Leafshow Cloudstream extensions",
+            "manifestVersion": 1,
+            "pluginLists": [
+              "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/refs/heads/builds/plugins.json"
+            ]
+          }
+          EOF
+
+          echo "=== artifacts ==="
           ls -la
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
