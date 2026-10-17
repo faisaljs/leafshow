@@ -7,6 +7,7 @@ import com.lagradost.cloudstream3.utils.ExtractorLink
 import com.lagradost.cloudstream3.utils.ExtractorLinkType
 import com.lagradost.cloudstream3.utils.Qualities
 import com.lagradost.cloudstream3.utils.newExtractorLink
+import java.net.URLEncoder
 
 class MovieBoxProvider : MainAPI() {
     override var mainUrl = "https://moviebox.ph"
@@ -41,10 +42,17 @@ class MovieBoxProvider : MainAPI() {
     // API plumbing
     // ------------------------------------------------------------------
 
+    private fun encodeUrl(value: String): String =
+        try {
+            URLEncoder.encode(value, "UTF-8").replace("+", "%20")
+        } catch (e: Exception) {
+            value
+        }
+
     private fun apiUrl(path: String, params: Map<String, String>): String {
         val all = linkedMapOf("host" to siteHost).apply { putAll(params) }
         val query = all.entries.joinToString("&") {
-            "${it.key}=${it.value.urlEncode()}"
+            "${it.key}=${encodeUrl(it.value)}"
         }
         return "$apiBase$path?$query"
     }
@@ -196,7 +204,6 @@ class MovieBoxProvider : MainAPI() {
         val plot = subject.path("description").asText(null)
             ?: subject.path("synopsis").asText(null)
         val year = subject.path("releaseDate").asText("").take(4).toIntOrNull()
-        val rating = subject.path("imdbRatingValue").asDouble(0.0).takeIf { it > 0.0 }
         val durationMinutes = (subject.path("duration").asInt(0) / 60).takeIf { it > 0 }
 
         val seasons = data.path("seasons").takeIf { it.isArray }
@@ -236,7 +243,6 @@ class MovieBoxProvider : MainAPI() {
                 this.posterUrl = poster
                 this.plot = plot
                 this.year = year
-                this.rating = rating
             }
         } else {
             newMovieLoadResponse(title, url, TvType.Movie, "$subjectId|$detailPath") {
@@ -244,7 +250,6 @@ class MovieBoxProvider : MainAPI() {
                 this.plot = plot
                 this.year = year
                 this.duration = durationMinutes
-                this.rating = rating
             }
         }
     }
