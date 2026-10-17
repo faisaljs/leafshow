@@ -10,7 +10,7 @@ cloudstream {
 }
 
 android {
-    namespace = "com.leafshow.moviebox"
+    namespace = "com.leafshow.moviebox"   // overrides root's com.example
 
     buildFeatures {
         buildConfig = true
