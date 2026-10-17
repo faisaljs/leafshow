@@ -353,11 +353,7 @@ class MovieBoxProvider : MainAPI() {
                     source = name,
                     name = if (resolution > 0) "$name ${resolution}p" else name,
                     url = streamUrl,
-                    type = if (streamUrl.contains(".m3u8", ignoreCase = true)) {
-                        ExtractorLinkType.M3U8
-                    } else {
-                        ExtractorLinkType.MP4
-                    }
+                    type = ExtractorLinkType.M3U8
                 ) {
                     this.referer = mainUrl
                     this.quality = quality
