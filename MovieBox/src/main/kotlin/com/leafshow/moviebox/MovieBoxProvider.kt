@@ -49,10 +49,6 @@ class MovieBoxProvider : MainAPI() {
         return "$apiBase$path?$query"
     }
 
-    /**
-     * First request to /home returns a guest JWT in the x-user header.
-     * Every later request sends it as Bearer.
-     */
     private suspend fun authHeader(): String? {
         bearer?.let { return "Bearer $it" }
 
@@ -114,10 +110,6 @@ class MovieBoxProvider : MainAPI() {
         return found.values.toList()
     }
 
-    /**
-     * Home and search payloads nest subject objects at different depths.
-     * Walk every object/array and keep anything carrying subjectId + title.
-     */
     private fun collectSubjects(node: JsonNode?, out: MutableMap<String, SearchResponse>) {
         if (node == null || node.isNull) return
 
@@ -153,7 +145,6 @@ class MovieBoxProvider : MainAPI() {
             else -> TvType.Movie
         }
 
-        // Internal url: subjectId|detailPath
         return newMovieSearchResponse(title, "$id|$detailPath", type) {
             this.posterUrl = poster
         }
@@ -225,14 +216,17 @@ class MovieBoxProvider : MainAPI() {
                     val episodeId = episode.path("episodeId").asText("")
                         .ifBlank { episode.path("id").asText("") }
 
-                    episodes += newEpisode(
-                        "$subjectId|$detailPath|$seasonNumber|$episodeNumber|$episodeId"
-                    ) {
-                        this.name = episode.path("title").asText("Episode $episodeNumber")
-                        this.season = seasonNumber
-                        this.episode = episodeNumber
-                        this.posterUrl = episode.path("cover").path("url").asText(null) ?: poster
-                    }
+                    episodes.add(
+                        newEpisode(
+                            "$subjectId|$detailPath|$seasonNumber|$episodeNumber|$episodeId"
+                        ) {
+                            this.name = episode.path("title").asText("Episode $episodeNumber")
+                            this.season = seasonNumber
+                            this.episode = episodeNumber
+                            this.posterUrl =
+                                episode.path("cover").path("url").asText(null) ?: poster
+                        }
+                    )
                 }
             }
         }
@@ -308,17 +302,22 @@ class MovieBoxProvider : MainAPI() {
         val playData = fetchPlay(subjectId, detailPath, season, episode, episodeId)
             ?: return false
 
-        val streamNodes = mutableListOf<JsonNode>()
+        val streamNodes: MutableList<JsonNode> = mutableListOf()
 
-        playData.path("streams").takeIf { it.isArray }?.forEach { streamNodes += it }
-        playData.path("playInfo").takeIf { it.isArray }?.forEach { streamNodes += it }
-        playData.path("videos").takeIf { it.isArray }?.forEach { streamNodes += it }
+        playData.path("streams").takeIf { it.isArray }?.forEach { node ->
+            streamNodes.add(node)
+        }
+        playData.path("playInfo").takeIf { it.isArray }?.forEach { node ->
+            streamNodes.add(node)
+        }
+        playData.path("videos").takeIf { it.isArray }?.forEach { node ->
+            streamNodes.add(node)
+        }
 
-        // Sometimes the play payload is a single object instead of an array.
         if (streamNodes.isEmpty() && playData.isObject) {
             val directUrl = playData.path("videoUrl").asText("")
                 .ifBlank { playData.path("playUrl").asText("") }
-            if (directUrl.isNotBlank()) streamNodes += playData
+            if (directUrl.isNotBlank()) streamNodes.add(playData)
         }
 
         var emitted = false
