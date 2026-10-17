@@ -37,7 +37,7 @@ subprojects {
     apply(plugin = "com.lagradost.cloudstream3.gradle")
 
     cloudstream {
-        setRepo(System.getenv("GITHUB_REPOSITORY") ?: "leafshow/leafshow")
+        setRepo(System.getenv("GITHUB_REPOSITORY") ?: "faisaljs/leafshow")
     }
 
     android {
