@@ -39,8 +39,10 @@ jobs:
             cd "$GITHUB_WORKSPACE/builds"
             git init
             git checkout --orphan builds
-            git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+            git remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
           fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Clean old builds
         run: rm -f "$GITHUB_WORKSPACE"/builds/*.cs3 "$GITHUB_WORKSPACE"/builds/plugins.json
@@ -52,7 +54,7 @@ jobs:
           java-version: 17
 
       - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
+        uses: android-actions/setup-android@v4
 
       - name: Build plugins
         run: |
@@ -75,3 +77,5 @@ jobs:
             git commit -m "Build $GITHUB_SHA"
           fi
           git push --force origin builds
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
