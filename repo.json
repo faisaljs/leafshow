@@ -1,0 +1,8 @@
+{
+  "name": "Leafshow Repo",
+  "description": "Leafshow Cloudstream extensions",
+  "manifestVersion": 1,
+  "pluginLists": [
+    "https://raw.githubusercontent.com/faisaljs/leafshow/refs/heads/builds/plugins.json"
+  ]
+}
