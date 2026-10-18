@@ -8,13 +8,11 @@ buildscript {
         google()
         mavenCentral()
         maven("https://jitpack.io")
-        maven("https://maven.pkg.jetbrains.space/kotlin/p/kotlin/dev")
     }
 
     dependencies {
         classpath("com.android.tools.build:gradle:8.7.3")
-        // Use the full plugin marker coordinate for reliable resolution
-        classpath("com.github.recloudstream.gradle:com.lagradost.cloudstream3.gradle.gradle.plugin:-SNAPSHOT")
+        classpath("com.github.recloudstream:gradle:-SNAPSHOT")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:2.4.0")
     }
 }
@@ -24,7 +22,6 @@ allprojects {
         google()
         mavenCentral()
         maven("https://jitpack.io")
-        maven("https://maven.pkg.jetbrains.space/kotlin/p/kotlin/dev")
     }
 }
 
