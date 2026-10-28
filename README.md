@@ -9,7 +9,7 @@ Settings → Extensions → Add repository:
 https://raw.githubusercontent.com/faisaljs/leafshow/refs/heads/builds/repo.json
 ```
 
-Shortcode : ```leafshow```
+Shortcode : ```leafrepo```
 
 ## Plugins
 
